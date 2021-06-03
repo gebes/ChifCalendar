@@ -20,13 +20,14 @@ const (
 func InitCronJob() {
 	log.Println("Initializing CronJob")
 	c := cron.New()
-	c.AddFunc("0 17 * * *", writeEvents)
+	c.AddFunc("0 17 * * *", sendEventsMessage)
 	c.Start()
 	log.Println("Initialized CronJob")
+	sendEventsMessage()
 	select {}
 }
 
-func writeEvents() {
+func sendEventsMessage() {
 	exams, homework, other := "", "", ""
 	for _, event := range fetchTomorrowEvents() {
 		if strings.Contains(event.Summary, HomeworkEmoji) {
@@ -44,8 +45,7 @@ func writeEvents() {
 		return
 	}
 
-	// important := strings.Contains(exams, "Schularbeit")
-	important := len(exams) != 0
+	important := strings.Contains(strings.ToLower(exams), "schularbeit")
 
 	embedFields := []*discordhook.EmbedField{}
 
@@ -102,7 +102,7 @@ func writeEvents() {
 func addRow(message *string, toAppend gocal.Event) {
 	*message += "• "+ toAppend.Summary
 	if len(toAppend.Description) != 0 {
-		*message += " (" + toAppend.Description + ")"
+		*message += " **–** " + toAppend.Description
 	}
 	*message += "\n"
 }
