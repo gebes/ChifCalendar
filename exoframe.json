@@ -1,0 +1,6 @@
+{
+  "name": "ChifCalendar",
+  "restart": "always",
+  "compress": false,
+  "letsencrypt": false
+}
