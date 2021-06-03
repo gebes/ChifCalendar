@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/Gebes/ChifCalendar/utils"
-	"github.com/Gebes/ChifCalendar/webhook"
+	"./utils"
+	"./webhook"
 	"log"
 )
 

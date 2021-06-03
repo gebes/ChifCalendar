@@ -6,4 +6,4 @@ COPY . .
 RUN go env -w GO111MODULE=auto
 RUN go build -o main .
 
-CMD ["main"]
+CMD ["main  "]

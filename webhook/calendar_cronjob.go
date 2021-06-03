@@ -1,7 +1,7 @@
 package webhook
 
 import (
-	"github.com/Gebes/ChifCalendar/utils"
+	"../utils"
 	"github.com/apognu/gocal"
 	"github.com/nickname32/discordhook"
 	"github.com/robfig/cron"
