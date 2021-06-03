@@ -1,9 +1,14 @@
 FROM golang:1.16
 
-WORKDIR /go/src/app
+# Set the Current Working Directory inside the container
+WORKDIR $GOPATH/src/github.com/codefresh-contrib/calendar
+
+# Copy everything from the current directory to the PWD (Present Working Directory) inside the container
 COPY . .
 
-RUN go env -w GO111MODULE=auto
-RUN go build -o main .
+# Download all the dependencies
+RUN go get -d -v ./...
 
-CMD ["main  "]
+# Install the package
+RUN go install -v ./...
+CMD ["calendar"]

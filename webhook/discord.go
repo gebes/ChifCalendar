@@ -1,7 +1,7 @@
 package webhook
 
 import (
-	"github.com/Gebes/ChifCalendar/utils"
+	"gebes.io/calendar/utils"
 	"github.com/nickname32/discordhook"
 	"log"
 )
