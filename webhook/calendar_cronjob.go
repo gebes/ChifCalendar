@@ -51,7 +51,6 @@ func InitCronJob() {
 	c.AddFunc("0 0 "+strconv.Itoa(MessageTime)+" * * *", sendEventsMessage)
 	c.Start()
 	log.Println("Initialized CronJob")
-	sendEventsMessage()
 	select {}
 }
 
