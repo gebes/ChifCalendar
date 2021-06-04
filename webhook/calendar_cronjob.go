@@ -7,6 +7,7 @@ import (
 	"github.com/nickname32/discordhook"
 	"github.com/robfig/cron"
 	"log"
+	"mvdan.cc/xurls"
 	"net/http"
 	"sort"
 	"strconv"
@@ -134,11 +135,14 @@ func addRow(category *Category, message *string, showDate bool, eventToAppend *g
 		dayOfWeek := eventToAppend.Start.Weekday()
 		*message += fmt.Sprintf("**%s. %02d.%02d.%04d** ", shortDayNames[dayOfWeek], day, month, year)
 	}
-
-	*message += strings.TrimPrefix(eventToAppend.Summary, category.emoji)
-	if len(eventToAppend.Description) != 0 {
-		*message += " **–** " + eventToAppend.Description
+	summary := strings.TrimPrefix(eventToAppend.Summary, category.emoji)
+	if len(eventToAppend.Description) != 0 && strings.Contains(eventToAppend.Description, "https://discord.com/channels"){
+		url := xurls.Relaxed.FindString(eventToAppend.Description)
+		*message += "["+summary + "]("+ url +")"
+	} else {
+		*message += summary
 	}
+
 	*message += "\n"
 }
 
