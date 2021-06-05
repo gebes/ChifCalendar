@@ -39,3 +39,7 @@ func GetCalendarKeys() *CalendarKeys {
 	notion := CalendarKeys{CalenderURL: os.Getenv("CalendarUrl")}
 	return &notion
 }
+
+func GetDatabaseUrl() string {
+	return os.Getenv("DatabaseUrl")
+}

@@ -2,6 +2,7 @@ package webhook
 
 import (
 	"fmt"
+	"gebes.io/calendar/database"
 	"gebes.io/calendar/utils"
 	"github.com/apognu/gocal"
 	"github.com/nickname32/discordhook"
@@ -51,19 +52,28 @@ func InitCronJob() {
 	c := cron.New()
 	c.AddFunc("0 0 "+strconv.Itoa(MessageTime)+" * * *", sendEventsMessage)
 	c.Start()
-	log.Println("Initialized CronJob")
 	select {}
 }
 
 func sendEventsMessage() {
 
-	tomorrowEmbed := getEmbedFor("Was steht morgen an?", fetchTomorrowEvents(), false)
-	sendEmbed(tomorrowEmbed)
+	tomorrowEmbed, tomorrowHash := getEmbedFor("Was steht morgen an?", fetchTomorrowEvents(), false)
+	nextWeekEmbed, nextWeekHash := getEmbedFor("Was steht in den nächsten Tagen an?", fetchNextWeekEvents(), true)
 
-	nextWeekEmbed := getEmbedFor("Was steht in den nächsten Tagen an?", fetchNextWeekEvents(), true)
+	hash := tomorrowHash + nextWeekHash
+	lastHash := database.LastMessageHash()
+
+	if lastHash != nil && hash == *lastHash {
+		return
+	}
+
+	database.SaveHash(hash)
+
+	sendEmbed(tomorrowEmbed)
 	sendEmbed(nextWeekEmbed)
 
 }
+
 
 func sendEmbed(embed *discordhook.Embed) {
 	if embed == nil {
@@ -79,7 +89,7 @@ func sendEmbed(embed *discordhook.Embed) {
 	}
 }
 
-func getEmbedFor(title string, events *[]gocal.Event, showDates bool) *discordhook.Embed {
+func getEmbedFor(title string, events *[]gocal.Event, showDates bool) (*discordhook.Embed, string) {
 	messages := make([]string, len(Categories))
 	important := false
 
@@ -111,7 +121,7 @@ func getEmbedFor(title string, events *[]gocal.Event, showDates bool) *discordho
 	}
 
 	if len(embedFields) == 0 {
-		return nil
+		return nil, utils.Hash("")
 	}
 
 	embed := &discordhook.Embed{
@@ -124,7 +134,7 @@ func getEmbedFor(title string, events *[]gocal.Event, showDates bool) *discordho
 		embed.Color = 0xf2c94c
 	}
 
-	return embed
+	return embed, utils.HashList(messages)
 
 }
 

@@ -17,5 +17,4 @@ func InitDiscord() {
 		panic(err)
 	}
 	WA = wa
-	log.Println("Initialized Discord Webhook")
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gebes.io/calendar/database"
 	"gebes.io/calendar/utils"
 	"gebes.io/calendar/webhook"
 	"log"
@@ -11,6 +12,7 @@ func main() {
 
 	log.Println("Starting ChifCalendar")
 
+	database.Connect()
 	webhook.InitDiscord()
 	webhook.InitCronJob()
 
