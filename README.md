@@ -1,16 +1,16 @@
 # ChifCalendar
-Simple webhook which fetches a calendar daily and posts a summary to a channel.
+This bot fetches a predefined calendar every day and posts a summary to a Discord server.
 ![](https://i.imgur.com/7Ub5mmk.png)
 
 ## Requirements
-1. Discord Webhook with ID and URl
+1. Discord Webhook with ID and URL
 2. Direct URL to the .ics file from the calendar
 3. MySQL Database Connection URL
 
 Create a .env file and fill in these details like the `.env.sample` file.
 
 ### Database
-Simply create a "message" Table
+Create a "message" Table
 ```mysql
 CREATE TABLE message (
     id INT NOT NULL AUTO_INCREMENT,
@@ -20,14 +20,16 @@ CREATE TABLE message (
 ```
 
 ## How to use?
-Create an event in your calendar. In the message an event will only show up if an emoji is provided.
+Create an event in the calendar with one of the following emojis as the prefix. The bot will categorize the events accordingly with the prefixes stripped of them.
 ```go
 HomeworkEmoji = "📘"
 ExamEmoji     = "📝"
 OtherEmoji    = "👻"
 ```
-It will then create a message based on your calendar.
 ![](https://i.imgur.com/2JOx7uR.png)
-![](https://i.imgur.com/7Ub5mmk.png)  
+![](https://i.imgur.com/7Ub5mmk.png)
 ### Hyperlinks
-If the description contains a URL which redirects to a Discord Message, then the webhook creates a hyperlink.
+If the description contains a URL that redirects to a Discord Message, then the webhook creates a hyperlink.
+
+### Duplicate messages
+The bot requires a database to store each message's SHA256 hash. Saving the hash values makes it possible to prevent duplicate messages. In other words, if the message would look the same as the last message sent, then the bot will not send anything.
