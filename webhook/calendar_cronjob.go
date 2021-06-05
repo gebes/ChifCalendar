@@ -49,7 +49,11 @@ var (
 
 func InitCronJob() {
 	log.Println("Initializing CronJob")
-	c := cron.New()
+	location, err := time.LoadLocation("Europe/Vienna")
+	if err != nil {
+		panic(err);
+	}
+	c := cron.NewWithLocation(location)
 	c.AddFunc("0 0 "+strconv.Itoa(MessageTime)+" * * *", sendEventsMessage)
 	c.Start()
 	select {}
