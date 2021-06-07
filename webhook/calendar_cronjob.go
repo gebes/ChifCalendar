@@ -48,14 +48,16 @@ var (
 )
 
 func InitCronJob() {
+
 	log.Println("Initializing CronJob")
 	location, err := time.LoadLocation("Europe/Vienna")
 	if err != nil {
-		panic(err);
+		panic(err)
 	}
 	c := cron.NewWithLocation(location)
 	c.AddFunc("0 0 "+strconv.Itoa(MessageTime)+" * * *", sendEventsMessage)
 	c.Start()
+
 	select {}
 }
 
@@ -78,7 +80,6 @@ func sendEventsMessage() {
 
 }
 
-
 func sendEmbed(embed *discordhook.Embed) {
 	if embed == nil {
 		return
@@ -87,6 +88,15 @@ func sendEmbed(embed *discordhook.Embed) {
 		Embeds: []*discordhook.Embed{
 			embed,
 		},
+	}, nil, "")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func sendMessage(message string) {
+	_, err := WA.Execute(nil, &discordhook.WebhookExecuteParams{
+		Content: message,
 	}, nil, "")
 	if err != nil {
 		panic(err)
@@ -150,9 +160,9 @@ func addRow(category *Category, message *string, showDate bool, eventToAppend *g
 		*message += fmt.Sprintf("**%s. %02d.%02d.%04d** ", shortDayNames[dayOfWeek], day, month, year)
 	}
 	summary := strings.TrimPrefix(eventToAppend.Summary, category.emoji)
-	if len(eventToAppend.Description) != 0 && strings.Contains(eventToAppend.Description, "https://discord.com/channels"){
+	if len(eventToAppend.Description) != 0 && strings.Contains(eventToAppend.Description, "https://discord.com/channels") {
 		url := xurls.Relaxed.FindString(eventToAppend.Description)
-		*message += "["+summary + "]("+ url +")"
+		*message += "[" + summary + "](" + url + ")"
 	} else {
 		*message += summary
 	}
@@ -161,7 +171,7 @@ func addRow(category *Category, message *string, showDate bool, eventToAppend *g
 }
 
 func fetchTomorrowEvents() *[]gocal.Event {
-	start, end := tomorrow(), tomorrow().Add(24*time.Hour)
+	start, end := tomorrow().Add(8*time.Hour), tomorrow().Add(8*time.Hour)
 	return fetchEventsInPeriod(&start, &end)
 }
 func fetchNextWeekEvents() *[]gocal.Event {
