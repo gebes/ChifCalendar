@@ -1,4 +1,4 @@
-FROM golang:1.16
+FROM golang:1.17
 
 # Set the Current Working Directory inside the container
 WORKDIR $GOPATH/src/github.com/codefresh-contrib/calendar
