@@ -13,7 +13,7 @@ func main() {
 	log.Println("Starting ChifCalendar")
 
 	database.Connect()
-	webhook.InitDiscord()
+
 	webhook.InitCronJob()
 
 }

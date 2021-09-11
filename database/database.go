@@ -20,9 +20,10 @@ func Connect() {
 	Database = db
 }
 
-func LastMessageHash() *string {
+func LastMessageHash(webhookId int) *string {
 
-	results, err := Database.Query("SELECT * FROM message ORDER BY message.id DESC LIMIT 1;")
+	results, err := Database.Query("SELECT * FROM message WHERE webhookId = ? ORDER BY message.id DESC LIMIT 1;", webhookId)
+	defer results.Close()
 
 	if err != nil {
 		panic(err)
@@ -31,7 +32,7 @@ func LastMessageHash() *string {
 	var lastMessage Message
 
 	results.Next()
-	err = results.Scan(&lastMessage.id, &lastMessage.hashValue)
+	err = results.Scan(&lastMessage.id, &lastMessage.webhookId, &lastMessage.hashValue)
 	if err != nil {
 		return nil
 	}
@@ -39,12 +40,33 @@ func LastMessageHash() *string {
 	return &lastMessage.hashValue
 }
 
-func SaveHash(toSave string) {
+func SaveHash(webhookId int, hash string) {
 
-	_, err := Database.Query("INSERT INTO message(message.hashValue) VALUES(\"" + toSave + "\");")
+	_, err := Database.Query("INSERT INTO message(message.webhookId, message.hashValue) VALUES(?, ?);", webhookId, hash)
 
 	if err != nil {
 		panic(err)
 	}
 
+}
+
+func GetWebhooks() ([]Webhook, error) {
+	result, err := Database.Query("SELECT * FROM webhook")
+	defer result.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	var webhooks []Webhook
+	var webhook Webhook
+
+	for result.Next() {
+		err = result.Scan(&webhook.Id, &webhook.DiscordId, &webhook.DiscordToken, &webhook.CalendarPrivateUrl, &webhook.CalendarPublicUrl, &webhook.Nickname, &webhook.PrimaryColor)
+		if err != nil {
+			return nil, err
+		}
+		webhooks = append(webhooks, webhook)
+	}
+
+	return webhooks, nil
 }

@@ -17,6 +17,6 @@ func Hash(stringToHash string) string {
 	h := sha1.New()
 	h.Write([]byte(stringToHash))
 	bs  := h.Sum(nil)
-	sh:= string(fmt.Sprintf("%x\n", bs))
+	sh:= fmt.Sprintf("%x", bs)
 	return sh
 }
