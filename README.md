@@ -13,11 +13,11 @@ Create a .env file and fill in these details like the `.env.sample` file.
 Create a `message` Table
 ```mysql
 CREATE TABLE message (
-                         id INT NOT NULL AUTO_INCREMENT,
-                         webhookId INT NOT NULL,
-                         hashValue VARCHAR(256),
-                         PRIMARY KEY(id),
-                         FOREIGN KEY(webhookId) REFERENCES webhook(id) ON DELETE CASCADE
+    id INT NOT NULL AUTO_INCREMENT,
+    webhookId INT NOT NULL,
+    hashValue VARCHAR(256),
+    PRIMARY KEY(id),
+    FOREIGN KEY(webhookId) REFERENCES webhook(id) ON DELETE CASCADE
 );
 ```
 
