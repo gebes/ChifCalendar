@@ -73,7 +73,7 @@ func (calendar *Calendar) BuildWebhook() (*discordhook.WebhookAPI, error) {
 func (calendar *Calendar) SendEventsMessage() {
 
 	tomorrowEmbed, tomorrowHash := calendar.getEmbedFor("Plan für morgen", calendar.fetchTomorrowEvents(), false)
-	nextWeekEmbed, nextWeekHash := calendar.getEmbedFor("Demnächst", calendar.fetchNextWeekEvents(), true)
+	nextWeekEmbed, nextWeekHash := calendar.getEmbedFor("Demnächst", calendar.fetchAfterTomorrowEventsEvents(), true)
 
 	hash := tomorrowHash + nextWeekHash
 	lastHash := database.LastMessageHash(calendar.Id)
@@ -194,8 +194,8 @@ func (calendar *Calendar) fetchTomorrowEvents() *[]gocal.Event {
 	start, end := tomorrow().Add(8*time.Hour), tomorrow().Add(8*time.Hour)
 	return calendar.fetchEventsInPeriod(&start, &end)
 }
-func (calendar *Calendar) fetchNextWeekEvents() *[]gocal.Event {
-	start, end := tomorrow().Add(48*time.Hour), tomorrow().Add(8*24*time.Hour)
+func (calendar *Calendar) fetchAfterTomorrowEventsEvents() *[]gocal.Event {
+	start, end := tomorrow().Add(48*time.Hour), tomorrow().Add(20*24*time.Hour)
 	return calendar.fetchEventsInPeriod(&start, &end)
 }
 
