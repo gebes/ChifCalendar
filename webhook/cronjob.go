@@ -8,12 +8,13 @@ import (
 	"time"
 )
 
-
-
 func InitCronJob() {
 
 	log.Println("Initializing CronJob")
-	broadcastToAllWebhooks()
+
+	// Testing line, if you want to instantly send the summaries and not wait for the cronjob
+	// broadcastToAllWebhooks()
+
 	location, err := time.LoadLocation("Europe/Vienna")
 	if err != nil {
 		panic(err)
@@ -25,7 +26,7 @@ func InitCronJob() {
 	select {}
 }
 
-func broadcastToAllWebhooks(){
+func broadcastToAllWebhooks() {
 
 	webhooks, err := database.GetWebhooks()
 
@@ -40,4 +41,3 @@ func broadcastToAllWebhooks(){
 	}
 
 }
-
