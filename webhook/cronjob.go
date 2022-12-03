@@ -20,7 +20,10 @@ func InitCronJob() {
 		panic(err)
 	}
 	c := cron.NewWithLocation(location)
-	c.AddFunc("0 0 "+strconv.Itoa(MessageTime)+" * * *", broadcastToAllWebhooks)
+	err = c.AddFunc("0 0 "+strconv.Itoa(MessageTime)+" * * *", broadcastToAllWebhooks)
+	if err != nil {
+		panic(err)
+	}
 	c.Start()
 
 	select {}

@@ -1,13 +1,14 @@
 package webhook
 
 import (
+	"context"
 	"fmt"
 	"gebes.io/calendar/database"
 	"gebes.io/calendar/utils"
+	"github.com/Quaver/discordhook"
 	"github.com/andersfylling/snowflake"
 	"github.com/apognu/gocal"
 	"github.com/mvdan/xurls"
-	"github.com/nickname32/discordhook"
 	"log"
 	"net/http"
 	"sort"
@@ -95,7 +96,7 @@ func (calendar *Calendar) SendEventsMessage() {
 	err = calendar.SendEmbed(tomorrowEmbed)
 	if err != nil {
 		log.Println("Could not send tomorrowEmbed to", calendar.Nickname, err, tomorrowEmbed)
-	} else if tomorrowEmbed != nil{
+	} else if tomorrowEmbed != nil {
 		log.Println("Sent tomorrowEmbed to", calendar.Nickname)
 	}
 
@@ -115,7 +116,7 @@ func (calendar *Calendar) SendEmbed(embed *discordhook.Embed) error {
 	if embed == nil {
 		return nil
 	}
-	_, err := calendar.discordWebhook.Execute(nil, &discordhook.WebhookExecuteParams{
+	_, err := calendar.discordWebhook.Execute(context.Background(), &discordhook.WebhookExecuteParams{
 		Embeds: []*discordhook.Embed{
 			embed,
 		},
@@ -142,7 +143,7 @@ func (calendar *Calendar) getEmbedFor(title string, events *[]gocal.Event, showD
 			important = true
 		}
 
-		if len(messages[i]) == 0 {
+		if messages[i] == "" {
 			continue
 		}
 
@@ -180,7 +181,7 @@ func addRow(category *Category, message *string, showDate bool, eventToAppend *g
 		*message += fmt.Sprintf("**%s. %02d.%02d.%04d** ", shortDayNames[dayOfWeek], day, month, year)
 	}
 	summary := strings.TrimPrefix(eventToAppend.Summary, category.emoji)
-	if len(eventToAppend.Description) != 0 && strings.Contains(eventToAppend.Description, "https://discord.com/channels") {
+	if eventToAppend.Description != "" && strings.Contains(eventToAppend.Description, "https://discord.com/channels") {
 		url := xurls.Relaxed.FindString(eventToAppend.Description)
 		*message += "[" + summary + "](" + url + ")"
 	} else {
@@ -214,7 +215,7 @@ func (calendar *Calendar) fetchEventsInPeriod(start *time.Time, end *time.Time) 
 	}
 
 	events := c.Events
-	sort.Slice(events[:], func(i, j int) bool {
+	sort.Slice(events, func(i, j int) bool {
 		return events[i].Start.Unix() < events[j].Start.Unix()
 	})
 	return &events

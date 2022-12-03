@@ -23,11 +23,10 @@ func Connect() {
 func LastMessageHash(webhookId int) *string {
 
 	results, err := Database.Query("SELECT * FROM message WHERE webhookId = ? ORDER BY message.id DESC LIMIT 1;", webhookId)
-	defer results.Close()
-
 	if err != nil {
 		panic(err)
 	}
+	defer results.Close()
 
 	var lastMessage Message
 
@@ -42,7 +41,7 @@ func LastMessageHash(webhookId int) *string {
 
 func SaveHash(webhookId int, hash string) {
 
-	_, err := Database.Query("INSERT INTO message(message.webhookId, message.hashValue) VALUES(?, ?);", webhookId, hash)
+	_, err := Database.Exec("INSERT INTO message(message.webhookId, message.hashValue) VALUES(?, ?);", webhookId, hash)
 
 	if err != nil {
 		panic(err)
@@ -52,10 +51,10 @@ func SaveHash(webhookId int, hash string) {
 
 func GetWebhooks() ([]Webhook, error) {
 	result, err := Database.Query("SELECT * FROM webhook")
-	defer result.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer result.Close()
 
 	var webhooks []Webhook
 	var webhook Webhook

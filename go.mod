@@ -3,13 +3,13 @@ module gebes.io/calendar
 go 1.17
 
 require (
+	github.com/Quaver/discordhook v1.0.3
 	github.com/andersfylling/snowflake v1.3.0
 	github.com/apognu/gocal v0.8.0
 	github.com/channelmeter/iso8601duration v0.0.0-20150204201828-8da3af7a2a61 // indirect
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/joho/godotenv v1.3.0
 	github.com/mvdan/xurls v1.1.0
-	github.com/nickname32/discordhook v1.0.2
 	github.com/robfig/cron v1.2.0
 	github.com/stretchr/testify v1.4.0 // indirect
 )

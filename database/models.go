@@ -7,12 +7,11 @@ type Message struct {
 }
 
 type Webhook struct {
-	Id int
-	DiscordId    uint64
-	DiscordToken string
+	Id                 int
+	DiscordId          uint64
+	DiscordToken       string
 	CalendarPrivateUrl string
-	CalendarPublicUrl string
-	Nickname    string
-	PrimaryColor int
+	CalendarPublicUrl  string
+	Nickname           string
+	PrimaryColor       int
 }
-

@@ -16,7 +16,7 @@ func HashList(list []string) string {
 func Hash(stringToHash string) string {
 	h := sha1.New()
 	h.Write([]byte(stringToHash))
-	bs  := h.Sum(nil)
-	sh:= fmt.Sprintf("%x", bs)
+	bs := h.Sum(nil)
+	sh := fmt.Sprintf("%x", bs)
 	return sh
 }

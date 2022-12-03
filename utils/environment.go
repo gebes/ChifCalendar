@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func InitEnvironment(){
+func InitEnvironment() {
 	err := godotenv.Load()
 
 	if err != nil {
